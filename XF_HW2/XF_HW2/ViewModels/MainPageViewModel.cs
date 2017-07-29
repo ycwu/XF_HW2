@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
@@ -16,19 +17,14 @@ namespace XF_HW2.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<ShoppingItem> ShoppingItemList { get; set; } = new ObservableCollection<ShoppingItem>();
-        //public ShoppingItem ShppingItemSelected { get; set; }
-        //public readonly IPageDialogService _dialogService;
+        private readonly INavigationService _navigationService;
+
         public string TotalPrice { get; set; } = "總共金額:";
-        public DelegateCommand ShoppingItemSelectedCommand { get; set; }
         public DelegateCommand TotalPriceCommand { get; set; }
 
-        public MainPageViewModel()//IPageDialogService dialogService)
+        public MainPageViewModel(INavigationService navigationService)
         {
-            //_dialogService = dialogService;
-            //ShoppingItemSelectedCommand = new DelegateCommand(async () =>
-            //{
-            //    await _dialogService.DisplayAlertAsync("Info", $"你選取的是 {ShppingItemSelected.Name}", "OK");
-            //});
+            _navigationService = navigationService;
             TotalPriceCommand = new DelegateCommand(() => {
                 decimal? iTotalPrice = 0;
                 foreach (var item in ShoppingItemList)
