@@ -29,7 +29,11 @@ namespace XF_HW2.ViewModels
                 decimal? iTotalPrice = 0;
                 foreach (var item in ShoppingItemList)
                 {
-                    iTotalPrice += item.Price * item.Qty;
+                    var fooObj = item.Price * item.Qty;
+                    if (fooObj != null)
+                    {
+                        iTotalPrice += fooObj;
+                    }
                 }
                 //iTotalPrice = 100;
                 TotalPrice = $"總共金額: {iTotalPrice}";
