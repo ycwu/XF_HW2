@@ -3,6 +3,7 @@
     x:Class="XF_HW2.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:attachedProperties="clr-namespace:XF_HW2.AttachedProperties"
     xmlns:converter="clr-namespace:XF_HW2.Converters"
     xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
     Title="購物清單"
@@ -20,16 +21,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
         <BoxView
             Grid.Row="0"
             Grid.Column="0"
             HorizontalOptions="Fill"
             VerticalOptions="Fill"
-            Color="#848484" />
+            Color="Gray" />
 
         <Label
             Grid.Row="0"
@@ -37,7 +34,17 @@
             Margin="20,0,0,0"
             FontSize="16"
             HorizontalOptions="Start"
-            Text="{Binding TotalPrice}"
+            Text="總共金額:"
+            TextColor="White"
+            VerticalOptions="Center" />
+
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="100,0,0,0"
+            FontSize="16"
+            HorizontalOptions="Start"
+            Text="{Binding TotalPrice, StringFormat='{0:#,##0.#}元'}"
             TextColor="White"
             VerticalOptions="Center" />
 
@@ -81,14 +88,30 @@
                                     TextColor="Black"
                                     VerticalOptions="Center"
                                     WidthRequest="100" />
+                                <!--
                                 <Entry
                                     Margin="0,0,20,0"
                                     BackgroundColor="#A9F5BC"
                                     FontSize="18"
                                     HeightRequest="50"
-                                    HorizontalOptions="End"
+                                    HorizontalOptions="EndAndExpand"
                                     HorizontalTextAlignment="End"
+                                    Keyboard="Numeric"
                                     Text="{Binding Qty, Converter={StaticResource NullableToString}}}"
+                                    TextColor="Black"
+                                    VerticalOptions="Center"
+                                    WidthRequest="150" />
+                                -->
+                                <Entry
+                                    Margin="0,0,20,0"
+                                    attachedProperties:CheckNullAttProperty.CheckNull="True"
+                                    BackgroundColor="#A9F5BC"
+                                    FontSize="18"
+                                    HeightRequest="50"
+                                    HorizontalOptions="EndAndExpand"
+                                    HorizontalTextAlignment="End"
+                                    Keyboard="Numeric"
+                                    Text="{Binding Qty}"
                                     TextColor="Black"
                                     VerticalOptions="Center"
                                     WidthRequest="150" />
@@ -98,5 +121,26 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <!--  這裡使用一個遮罩，告知使用者，現在正在忙碌於計算統計資料中  -->
+        <Grid
+            Grid.RowSpan="2"
+            ColumnSpacing="0"
+            IsVisible="{Binding ShowBusyMark}"
+            RowSpacing="0">
+            <BoxView Opacity="0.6" Color="Black" />
+            <Label
+                HorizontalOptions="Center"
+                Text="計算中，請稍後..."
+                TextColor="White"
+                VerticalOptions="Center" />
+            <ActivityIndicator
+                Margin="0,140,0,0"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                IsRunning="{Binding ShowBusyMark}"
+                VerticalOptions="Center"
+                WidthRequest="100" />
+        </Grid>
     </Grid>
 </ContentPage>

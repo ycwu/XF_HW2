@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using XF_HW2.Models;
 using XF_HW2.Repositories;
 
@@ -19,24 +20,18 @@ namespace XF_HW2.ViewModels
         public ObservableCollection<ShoppingItem> ShoppingItemList { get; set; } = new ObservableCollection<ShoppingItem>();
         private readonly INavigationService _navigationService;
 
-        public string TotalPrice { get; set; } = "總共金額:";
+        public bool ShowBusyMark { get; set; }
+        public int? TotalPrice { get; set; } = 0;
         public DelegateCommand TotalPriceCommand { get; set; }
 
         public MainPageViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
-            TotalPriceCommand = new DelegateCommand(() => {
-                decimal? iTotalPrice = 0;
-                foreach (var item in ShoppingItemList)
-                {
-                    var fooObj = item.Price * item.Qty;
-                    if (fooObj != null)
-                    {
-                        iTotalPrice += fooObj;
-                    }
-                }
-                //iTotalPrice = 100;
-                TotalPrice = $"總共金額: {iTotalPrice}";
+            TotalPriceCommand = new DelegateCommand(async () => {
+                ShowBusyMark = true;
+                CalculateSum();
+                await Task.Delay(2000);
+                ShowBusyMark = false;
             });
         }
 
@@ -61,7 +56,21 @@ namespace XF_HW2.ViewModels
                     Name = item.Name,
                     Price = item.Price,
                     Qty = item.Qty,
+                    UpdateSumCommand = new DelegateCommand(CalculateSum),
                 });
+            }
+        }
+
+        public void CalculateSum()
+        {
+            TotalPrice = 0;
+            foreach (var item in ShoppingItemList)
+            {
+                var SubPrice = item.Price * item.Qty;
+                if (SubPrice != null)
+                {
+                    TotalPrice += SubPrice;
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Commands;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,8 +14,18 @@ namespace XF_HW2.Models
         //商品名稱
         public string Name { get; set; }
         //單價
-        public decimal Price { get; set; }
+        public int Price { get; set; }
         //數量
         public int? Qty { get; set; }
+
+        public void OnQtyChanged()
+        {
+            if (UpdateSumCommand != null)
+            {
+                UpdateSumCommand.Execute();
+            }
+        }
+
+        public DelegateCommand UpdateSumCommand { get; set; }
     }
 }
